@@ -179,3 +179,60 @@ class Crypt1:
             if hex[i] not in alphabet:
                 print('Character {} is an invalid hex character'.format(i + 1))
                 quit()
+
+    def fixed_xor(self,mess,key):
+        """
+        Xor to equal length hex strings together
+
+        data input: two hex strings (str) of eqaul length
+        data output: A hex string (str)
+        """
+        #####Declerations#####
+        ####Variables####
+        mess_bin = ''
+        key_bin = ''
+        xor_bin = ''
+        #####Computations#####
+        #Checks the hex string are equal length
+        if len(mess) != len(key):
+            print('The hex strings must be of equal length')
+            quit()
+
+        #Checks the hex's are valid
+        self.hex_checker(mess)
+        self.hex_checker(key)
+
+        #Converts the hex strings into binary numbers
+        # Loops through each decimal of the hex number and converts it to a 4 bit binary
+        for i in mess:
+            #adds it to the string of 4 bit binary
+            mess_bin += self.hex_digit_to_4bit(i)
+
+        for i in key:
+            key_bin += self.hex_digit_to_4bit(i)
+
+
+        self.xor(mess_bin,key_bin)
+
+    def xor(self,m,k):
+        """
+        Xor to equal length hex strings together
+
+        data input: two binary numvers (str) of eqaul length
+        data output: A binary number (str)
+        """
+        #####Declerations#####
+        ####Variables####
+        x = ''
+        #####Computations#####
+        for i in range(len(m)):
+            if m[i] == '1' and k[i] == '1':
+                x += '0'
+            elif m[i] == '0' and k[i] == '0':
+                x += '0'
+            else:
+                x += '1'
+
+        return x
+
+    def bin_to_hex()
