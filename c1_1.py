@@ -136,28 +136,28 @@ class Crypt1:
         ####Variables####
         #Base64 alphabet in a string
         b64_index_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-        #Sum variable
-        sum = 0
 
 
         #####Computations#####
         #Converts the 6 bit binary number into a decimal number
-        for i in range(6):
-            if i == 0:
-                sum += int(binary[i]) * 32
-            elif i == 1:
-                sum += int(binary[i]) * 16
-            elif i == 2:
-                sum += int(binary[i]) * 8
-            elif i == 3:
-                sum += int(binary[i]) * 4
-            elif i == 4:
-                sum += int(binary[i]) * 2
-            elif i == 5:
-                sum += int(binary[i]) * 1
+        self.n_bit_binary_decoder(binary,6)
+
+        #for i in range(6):
+        #    if i == 0:
+        #        sum += int(binary[i]) * 32
+        #    elif i == 1:
+        #        sum += int(binary[i]) * 16
+        #    elif i == 2:
+        #        sum += int(binary[i]) * 8
+        #    elif i == 3:
+        #        sum += int(binary[i]) * 4
+        #    elif i == 4:
+        #        sum += int(binary[i]) * 2
+        #    elif i == 5:
+        #        sum += int(binary[i]) * 1
 
         #Returns the base64 character
-        return b64_index_table[sum]
+        return b64_index_table[self.n_bit_binary_decoder(binary,6)]
 
     def hex_checker(self,hex):
         """
@@ -192,6 +192,13 @@ class Crypt1:
         mess_bin = ''
         key_bin = ''
         xor_bin = ''
+        xor_hex = ''
+
+        ####list###
+        #Holds the hex alphabet
+        hex_holder = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
+
+
         #####Computations#####
         #Checks the hex string are equal length
         if len(mess) != len(key):
@@ -212,7 +219,12 @@ class Crypt1:
             key_bin += self.hex_digit_to_4bit(i)
 
 
-        self.xor(mess_bin,key_bin)
+        xor_bin = self.xor(mess_bin,key_bin)
+
+        print(xor_bin)
+        for i in range(int(len(mess)/2)):
+            print(xor_bin[0 + 4 * i: 4 +  4 * i])
+            xor_hex += hex_holder[self.n_bit_binary_decoder(xor_bin[0 + 4 * i: 4 +  4 * i],4)]
 
     def xor(self,m,k):
         """
@@ -223,6 +235,7 @@ class Crypt1:
         """
         #####Declerations#####
         ####Variables####
+        #Holds the xor binary
         x = ''
         #####Computations#####
         for i in range(len(m)):
@@ -235,4 +248,26 @@ class Crypt1:
 
         return x
 
-    def bin_to_hex()
+    def n_bit_binary_decoder(self,bin,n):
+        """
+        Decodes an nbit binary string into base 10
+
+        data input: two binary numvers (str) of eqaul length
+        data output: A base 10 number (int)
+        """
+        #####Declerations#####
+        ####Variables####
+        #Calculates the max binary value
+        max_bin = 2 ** (n-1)
+        # Holds the base 10 sum of the binary number
+        sum = 0
+
+        #####Computations#####
+        #loops through each bit of the binary number
+        #Starts at the big end
+        for i in range(n):
+            #Adds the current maximum times either 0 or 1 to the base 10 sum
+            sum += int(bin[i]) * max_bin
+
+        print(int(sum))
+        return int(sum)
