@@ -21,6 +21,9 @@ class Crypt1:
 
 
         #####Computations#####
+        #Valid input checker
+        self.hex_checker(hex)
+
         # Loops through each decimal of the hex number and converts it to a 4 bit binary
         for i in hex:
             #adds it to the string of 4 bit binary
@@ -28,6 +31,7 @@ class Crypt1:
 
         #If there is two hexs short of a 24 bit number
         if numbyte%3 == 1 :
+            print('a')
             #Convert all the 24bit binary chunks into base64
             base_holder = self.bin_to_base(base_holder,binary_string, 4 * int(numbyte//3))
             #Adds the padding to the remainder
@@ -154,3 +158,24 @@ class Crypt1:
 
         #Returns the base64 character
         return b64_index_table[sum]
+
+    def hex_checker(self,hex):
+        """
+        Checks the hex string is correct
+
+        data input: A hex string (str)
+        data output: n/a
+        """
+        #####Declerations#####
+        alphabet = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','A','B','C','D','E','F']
+
+        #####Computations#####
+        # Checks that it is even number of charaters becaseu a hex number is 2 things long
+        if len(hex) % 2 != 0:
+            print('Invalid hex input. It needs to be an even number of characters.')
+            quit()
+
+        for i in range(len(hex)):
+            if hex[i] not in alphabet:
+                print('Character {} is an invalid hex character'.format(i + 1))
+                quit()
