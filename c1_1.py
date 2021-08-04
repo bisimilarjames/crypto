@@ -218,13 +218,16 @@ class Crypt1:
         for i in key:
             key_bin += self.hex_digit_to_4bit(i)
 
-
+        # Xors the two binary strings
         xor_bin = self.xor(mess_bin,key_bin)
 
-        print(xor_bin)
-        for i in range(int(len(mess)/2)):
-            print(xor_bin[0 + 4 * i: 4 +  4 * i])
+        #Loops through each 4 bits in the xor binary string and converts it back to hex
+        for i in range(int(len(mess))):
+            # The binary decoder produces the index in the hex list for the appropriate hex value
+            # This is added to the hex string
             xor_hex += hex_holder[self.n_bit_binary_decoder(xor_bin[0 + 4 * i: 4 +  4 * i],4)]
+
+        return xor_hex
 
     def xor(self,m,k):
         """
@@ -238,12 +241,16 @@ class Crypt1:
         #Holds the xor binary
         x = ''
         #####Computations#####
+        #Loops through each bit in the message and key binary strings
         for i in range(len(m)):
+            #This is the xor truth table
             if m[i] == '1' and k[i] == '1':
                 x += '0'
             elif m[i] == '0' and k[i] == '0':
                 x += '0'
-            else:
+            elif m[i] == '1' and k[i] == '0':
+                x += '1'
+            elif m[i] == '0' and k[i] == '1':
                 x += '1'
 
         return x
@@ -268,6 +275,6 @@ class Crypt1:
         for i in range(n):
             #Adds the current maximum times either 0 or 1 to the base 10 sum
             sum += int(bin[i]) * max_bin
+            max_bin /= 2
 
-        print(int(sum))
         return int(sum)
