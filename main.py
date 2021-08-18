@@ -1,4 +1,4 @@
 from c1_1 import Crypt1 as c1
 h = c1()
 
-a = h.fixed_xor('1c0111001f010100061a024b53535009181c','686974207468652062756c6c277320657965')
+print(h.single_byte_xor('a4b3'))

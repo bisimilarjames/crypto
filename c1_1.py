@@ -1,6 +1,6 @@
 class Crypt1:
 
-
+    #Challenge 1
     def hex_to_base64(self,hex):
         """
         Converts a hexadecimal input to base 64 encoding
@@ -59,12 +59,10 @@ class Crypt1:
         Converts a digit of hexadecimal to 4 bit binary
 
         data input: A char of the hex input
-        data output: A 4 bit binary
+        data output: A 4 bit binary (str)
         """
         #####Declerations#####
         ####Lists####
-        #Holds the binary number
-        binary_holder = []
         #Holds the hex alphabet
         hex_holder = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
 
@@ -72,7 +70,6 @@ class Crypt1:
         #Holds the decimal number
         dec = 0
         #Holds the string of the 4 bit binary that will be returned
-        strh = ''
 
         #####Computations#####
         #If the hex sumbitted is between 0-9
@@ -82,31 +79,8 @@ class Crypt1:
         else:
             dec = int(hex_holder.index(digit.lower()))
 
-        #Binary conversion algorithm
-        while dec >= 1:
-            #If there remainder of the number submitted divided by 2 add a one to the binary arrray
-            if dec % 2 > 0:
-                binary_holder.append('1')
-            #Else add zero
-            elif dec % 2 == 0:
-                binary_holder.append('0')
-
-            #Floor divide the number by 2
-            dec = dec // 2
-
-        #If the binary versiuon of the hex is less than 4 bits the loop adds the remainder 0 bits
-        if len(binary_holder) < 4:
-            while len(binary_holder) < 4:
-                binary_holder.append('0')
-
-        #Reverse the order of the binary number
-        binary_holder.reverse()
-
-        #Converts the binary holder array into a string
-        for i in binary_holder:
-            strh += i
-
-        return strh
+        #Returns a four bit binary string
+        return self.base10_to_binary(dec, 4)
 
     def bin_to_base(self,bass,str,itr):
         """
@@ -140,22 +114,6 @@ class Crypt1:
 
         #####Computations#####
         #Converts the 6 bit binary number into a decimal number
-        self.n_bit_binary_decoder(binary,6)
-
-        #for i in range(6):
-        #    if i == 0:
-        #        sum += int(binary[i]) * 32
-        #    elif i == 1:
-        #        sum += int(binary[i]) * 16
-        #    elif i == 2:
-        #        sum += int(binary[i]) * 8
-        #    elif i == 3:
-        #        sum += int(binary[i]) * 4
-        #    elif i == 4:
-        #        sum += int(binary[i]) * 2
-        #    elif i == 5:
-        #        sum += int(binary[i]) * 1
-
         #Returns the base64 character
         return b64_index_table[self.n_bit_binary_decoder(binary,6)]
 
@@ -278,3 +236,90 @@ class Crypt1:
             max_bin /= 2
 
         return int(sum)
+
+    #Challenge 3
+    def single_byte_xor(self, mess):
+        """
+        Finds the byte key for a single
+
+        data input: Takes in a hex string (str)
+        data output:
+        """
+        #####Declerations#####
+        ####Lists####
+        mess_hol = ''
+        decrypt_bin =''
+
+        decimal_hol = []
+
+        ####Variables####
+        #Frequency anlaysis english
+        freq_dict = 'etaoinshrdlcumwfgypbvkjxqz'
+        #Holds the potential binary key
+        key = ''
+        #Holds the length of the message
+        encrypt_len = int(len(mess))
+
+
+        #####Computations#####
+        self.hex_checker(mess)
+
+        for i in mess:
+            mess_hol += self.hex_digit_to_4bit(i)
+
+        for i in range(0,2) :
+            key = self.base10_to_binary(i,8)
+            for j in range(encrypt_len):
+                if j % 2 == 0:
+                    decrypt_bin += self.xor(mess_hol[0 + 4 * j: 4 +  4 * j], key[0:4])
+                elif j % 2 == 1:
+                    decrypt_bin += self.xor(mess_hol[0 + 4 * j: 4 +  4 * j], key[4:8])
+
+
+            for j in range(encrypt_len//2):
+
+                decimal_hol.append(self.n_bit_binary_decoder(decrypt_bin[0 + 8 * j: 8 +  8 * j],8))
+
+
+
+    def base10_to_binary(self, decimal, bits):
+        """
+        Decodes an nbit binary string into base 10
+
+        data input: Takes in a positive integer less than 256 (int)
+        data output: A binary string of the required number of bits (str)
+        """
+        #####Declerations#####
+        ####Lists####
+        #Holds the binary number
+        binary_holder = []
+
+        ####Variables####
+        strh = ''
+
+        #####Computations#####
+        #Binary conversion algorithm
+        while decimal >= 1:
+            #If there remainder of the number submitted divided by 2 add a one to the binary arrray
+            if decimal % 2 > 0:
+                binary_holder.append('1')
+            #Else add zero
+            elif decimal % 2 == 0:
+                binary_holder.append('0')
+
+            #Floor divide the number by 2
+            decimal = decimal // 2
+
+        #If the binary version of the hex is less than 4 bits the loop adds the remainder 0 bits
+        if len(binary_holder) < bits:
+            while len(binary_holder) < bits:
+                binary_holder.append('0')
+
+        #Reverse the order of the binary number
+        binary_holder.reverse()
+
+        #Converts the binary holder array into a string
+        for i in binary_holder:
+            strh += i
+
+        return strh
